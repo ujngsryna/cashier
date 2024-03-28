@@ -1,17 +1,17 @@
 # Morcoffee
-Cashier App Morcoffee
-Database Name : db_cashier
-! File database ada di folder database !
+* Cashier App Morcoffee
+* Database Name : db_cashier
+* File database ada di folder database 
 
 * Multi User
-- Admin
+* Admin
   Username : admin
   Password : 123123
   
-- Owner
+* Owner
   Username : owner
   Password : 123123
 
-- Kasir
+* Kasir
   Username : kasir
   Password : 123123
