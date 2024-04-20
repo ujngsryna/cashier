@@ -68,7 +68,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 </a>
             </li>
 
-            <?php if ($_SESSION['level'] == "owner") : ?>
+            <?php if ($_SESSION['level'] == "admin") : ?>
             <li>
                 <a href="./activity.php">
                     <i class='bx bxs-message-dots'></i>

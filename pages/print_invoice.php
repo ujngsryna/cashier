@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: ../index.php');
+    exit;
+}
+
 include_once '../db/db-connection.php';
 
 // Periksa apakah ID transaksi disediakan dalam parameter GET

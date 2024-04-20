@@ -1,12 +1,13 @@
 <?php 
 session_start();
-include '../layout/header.php';
-require_once('../db/db-connection.php');
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
+
+include '../layout/header.php';
+require_once('../db/db-connection.php');
 
 // Ambil semua data produk
 $query = "SELECT * FROM products";
@@ -17,12 +18,14 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 
 // Ambil data produk berdasarkan ID
-$product_id = $_GET['id'];
+$product_id = isset($_GET['id']) ? $_GET['id'] : null;
 $product = [];
-foreach ($rows as $row) {
-    if ($row['id'] == $product_id) {
-        $product = $row;
-        break;
+if ($product_id !== null) {
+    foreach ($rows as $row) {
+        if ($row['id'] == $product_id) {
+            $product = $row;
+            break;
+        }
     }
 }
 
@@ -70,13 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_product'])) {
                 </div>
                 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                     <!-- Populasikan input field dengan data produk -->
-                    <input type="hidden" name="product_id" value="<?= $product['id']; ?>">
+                    <input type="hidden" name="product_id" value="<?= $product_id; ?>">
                     <label for="nama">Name :</label>
-                    <input type="text" id="nama" name="nama" value="<?= $product['nama_produk']; ?>" required><br>
+                    <input type="text" id="nama" name="nama" value="<?= $product['nama_produk'] ?? ''; ?>" required><br>
                     <label for="harga_produk">Price :</label>
-                    <input type="text" id="harga_produk" name="harga_produk" value="<?= $product['harga_produk']; ?>" required><br>
+                    <input type="text" id="harga_produk" name="harga_produk" value="<?= $product['harga_produk'] ?? ''; ?>" required><br>
                     <label for="jumlah">Quantity :</label>
-                    <input type="text" id="jumlah" name="jumlah" value="<?= $product['jumlah']; ?>" required><br>
+                    <input type="text" id="jumlah" name="jumlah" value="<?= $product['jumlah'] ?? ''; ?>" required><br>
                     <!-- Tambahkan field lain sesuai kebutuhan, seperti quantity -->
                     <button type="submit" name="update_product">Submit</button>
                 </form>

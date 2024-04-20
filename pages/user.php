@@ -1,13 +1,15 @@
 <?php 
 session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: ../index.php');
+    exit;
+}
+
 include '../layout/header.php';
 require_once('../db/db-connection.php');
 $users = select("SELECT * FROM users");
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
-    exit;
-}
 // membatasi halaman sesuai user login
 if ($_SESSION["level"] != "owner" and  $_SESSION['level'] != "admin") {
     echo "<script>
@@ -61,8 +63,8 @@ if ($_SESSION["level"] != "owner" and  $_SESSION['level'] != "admin") {
         <?php foreach ($users as $user) : ?>
      <tr>
         <td><?= $user['nama']; ?></td>
-        <td><?= $user['created_at']; ?></td>
-        <td><?= $user['updated_at']; ?></td>
+        <td><?= date('d F Y H:i:s', strtotime($user['created_at'])); ?></td>
+        <td><?= date('d F Y H:i:s', strtotime($user['updated_at'])); ?></td>
         <td><span class="status process"><?= $user['level']; ?></span></td>
         <td class="text-center">
         <?php if ($_SESSION['level'] == "admin" ||  $_SESSION['level'] == "owner") : ?>

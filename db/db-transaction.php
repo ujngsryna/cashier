@@ -105,81 +105,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kurang'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cetak'])) {
-    // Periksa stok sebelum checkout
-    $stokCukup = true;
-    foreach ($struk as $produk) {
-        $id_produk = $produk['id'];
-        $jumlah = $produk['jumlah'];
-        $query_stok = "SELECT jumlah FROM products WHERE id = $id_produk";
-        $result_stok = mysqli_query($conn, $query_stok);
-
-        if (!$result_stok) {
-            // Jika query gagal dieksekusi
-            $error = 'Gagal memeriksa stok produk.';
-            $stokCukup = false;
-            break;
-        }
-
-        $row_stok = mysqli_fetch_assoc($result_stok);
-        if ($row_stok['jumlah'] < $jumlah) {
-            $stokCukup = false;
-            break;
-        }
-    }
-
-    if (!$stokCukup) {
-        $error = 'Stok produk tidak mencukupi untuk checkout.';
+    // Periksa apakah keranjang belanja kosong
+    if (empty($struk)) {
+        $error = 'Keranjang belanja kosong.';
     } else {
-        // Lanjutkan proses checkout
-        if (isset($_POST['uang']) && isset($_POST['kembalian'])) {
-            $uang = $_POST['uang'];
-            $kembalian_transaksi = $_POST['kembalian'];
+        // Periksa stok sebelum checkout
+        $stokCukup = true;
+        foreach ($struk as $produk) {
+            $id_produk = $produk['id'];
+            $jumlah = $produk['jumlah'];
+            $query_stok = "SELECT jumlah FROM products WHERE id = $id_produk";
+            $result_stok = mysqli_query($conn, $query_stok);
 
-            if ($uang < $totalHarga) {
-                $error = "Uang yang diterima kurang dari total harga!";
-            } else {
-                // Proses checkout
-                $query_transaksi = "INSERT INTO transaksi (uang_pelanggan, kembalian, total_harga) VALUES ($uang, $kembalian_transaksi, $totalHarga)";
-                $result_transaksi = mysqli_query($conn, $query_transaksi);
-                if (!$result_transaksi) {
-                    $error = 'Gagal memproses transaksi.';
-                } else {
-                    $id_transaksi = mysqli_insert_id($conn);
-
-                    foreach ($struk as $produk) {
-                        $nama_produk = $produk['nama_produk'];
-                        $harga_produk = $produk['harga_produk'];
-                        $jumlah = $produk['jumlah'];
-                        $kode_unik = $produk['kode_unik'];
-                        $totalHargaProduk = $harga_produk * $jumlah;
-
-                        $query_produk = "INSERT INTO transaksi_produk (id_transaksi, nama_produk, harga_produk, jumlah, kode_unik, total_harga) VALUES ($id_transaksi, '$nama_produk', $harga_produk, $jumlah, '$kode_unik', $totalHargaProduk)";
-                        $result_produk = mysqli_query($conn, $query_produk);
-                        if (!$result_produk) {
-                            $error = 'Gagal menyimpan informasi produk dalam transaksi!';
-                            break;
-                        }
-
-                        $query_update_produk = "UPDATE products SET jumlah = jumlah - $jumlah WHERE id = $id_produk";
-                        $result_update_produk = mysqli_query($conn, $query_update_produk);
-                        if (!$result_update_produk) {
-                            $error = 'Gagal mengurangi jumlah produk!';
-                            break;
-                        }
-                    }
-
-                    // Bersihkan keranjang dan total harga setelah checkout berhasil
-                    $_SESSION['struk'] = [];
-                    $_SESSION['totalHarga'] = 0;
-                    header("Location: print_invoice.php?id_transaksi=$id_transaksi");
-                    exit();
-                }
+            if (!$result_stok) {
+                // Jika query gagal dieksekusi
+                $error = 'Gagal memeriksa stok produk.';
+                $stokCukup = false;
+                break;
             }
+
+            $row_stok = mysqli_fetch_assoc($result_stok);
+            if ($row_stok['jumlah'] < $jumlah) {
+                $stokCukup = false;
+                break;
+            }
+        }
+        //Jika stok produk tidak cukup
+        if (!$stokCukup) {
+            $error = 'Stok produk tidak mencukupi untuk checkout.';
         } else {
-            $error = "Mohon lengkapi informasi uang dan kembalian.";
+            // Lanjutkan proses checkout
+            if (isset($_POST['uang']) && isset($_POST['kembalian'])) {
+                $uang = $_POST['uang'];
+                $kembalian_transaksi = $_POST['kembalian'];
+
+                if ($uang < $totalHarga) {
+                    $error = "Uang yang diterima kurang dari total harga!";
+                } else {
+                    // Proses checkout
+                    $query_transaksi = "INSERT INTO transaksi (uang_pelanggan, kembalian, total_harga) VALUES ($uang, $kembalian_transaksi, $totalHarga)";
+                    $result_transaksi = mysqli_query($conn, $query_transaksi);
+                    if (!$result_transaksi) {
+                        $error = 'Gagal memproses transaksi.';
+                    } else {
+                        $id_transaksi = mysqli_insert_id($conn);
+
+                        foreach ($struk as $produk) {
+                            $id_produk = $produk['id'];
+                            $nama_produk = $produk['nama_produk'];
+                            $harga_produk = $produk['harga_produk'];
+                            $jumlah = $produk['jumlah'];
+                            $kode_unik = $produk['kode_unik'];
+                            $totalHargaProduk = $harga_produk * $jumlah;
+
+                            $query_produk = "INSERT INTO transaksi_produk (id_transaksi, nama_produk, harga_produk, jumlah, kode_unik, total_harga) VALUES ($id_transaksi, '$nama_produk', $harga_produk, $jumlah, '$kode_unik', $totalHargaProduk)";
+                            $result_produk = mysqli_query($conn, $query_produk);
+                            if (!$result_produk) {
+                                $error = 'Gagal menyimpan informasi produk dalam transaksi!';
+                                break;
+                            }
+
+                            $query_update_produk = "UPDATE products SET jumlah = jumlah - $jumlah WHERE id = $id_produk";
+                            $result_update_produk = mysqli_query($conn, $query_update_produk);
+                            if (!$result_update_produk) {
+                                $error = 'Gagal mengurangi jumlah produk!';
+                                break;
+                            }
+                        }
+
+                        // Bersihkan keranjang dan total harga setelah checkout berhasil
+                        $_SESSION['struk'] = [];
+                        $_SESSION['totalHarga'] = 0;
+                        header("Location: print_invoice.php?id_transaksi=$id_transaksi");
+                        exit();
+                    }
+                }
+            } else {
+                $error = "Mohon lengkapi informasi uang dan kembalian.";
+            }
         }
     }
 }
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['refresh'])) {
     $_SESSION['struk'] = [];

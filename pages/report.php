@@ -1,12 +1,21 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: ../index.php');
+    exit;
+}
+// Memeriksa level pengguna
+if ($_SESSION["level"] != "owner") {
+    echo "<script>
+            window.history.back();
+          </script>";
+    exit;
+}
+
 require_once('../db/db-connection.php');
 include '../layout/header.php';
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
-    exit;
-}
 
 $transaksi = select("SELECT * FROM transaksi_produk");
 ?>
@@ -35,7 +44,7 @@ $transaksi = select("SELECT * FROM transaksi_produk");
                         <!-- Show entries table -->
                         <label for="entries">Show entries:</label>
                         <select id="entries" class="form-select-custom" onchange="showEntries()">
-                            <option value="5">5</option>
+                            <option value="5" selected>5</option>
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -55,7 +64,7 @@ $transaksi = select("SELECT * FROM transaksi_produk");
                             <?php foreach ($transaksi as $row) : ?>
                                 <tr>
                                     <td><?php echo $row['nama_produk']; ?></td>
-                                    <td><?php echo $row['tanggal_transaksi']; ?></td>
+                                    <td><?php echo date('d F Y H:i:s', strtotime($row['tanggal_transaksi'])); ?></td>
                                     <td><?php echo $row['jumlah']; ?></td>
                                     <td><?php echo $row['total_harga']; ?></td>
                                 </tr>

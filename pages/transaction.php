@@ -1,15 +1,23 @@
 <?php 
 session_start();
-require_once('../db/db-connection.php');
-include '../db/db-transaction.php';
-include '../layout/header.php';
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
+    header('Location: ../index.php');
+    exit;
+}
+
+// Memeriksa level pengguna
+if ($_SESSION["level"] != "kasir") {
+    echo "<script>
+            window.history.back();
+          </script>";
     exit;
 }
 
 
+require_once('../db/db-connection.php');
+include '../db/db-transaction.php';
+include '../layout/header.php';
 
 ?>
 
@@ -35,8 +43,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <div class="order">
                 <div class="head">
                     <h3>Menu</h3>
-                    <i class='bx bx-search'></i>
-                    <i class='bx bx-filter'></i>
+                    <!-- <i class='bx bx-search'></i>
+                    <i class='bx bx-filter'></i> -->
                 </div>
                 <table>
                     <thead>
@@ -67,7 +75,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 </table>
             </div>
             <div class="todo">
-                <div class="order">
+                <div class="order"> 
                     <div class="head">
                         <h3>Cart</h3>
                     </div>
@@ -76,7 +84,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                             <tr class="">
                                 <th>Product Name</th>
                                 <th>Quantity</th>
-                                <th>Total Cost</th>
+                                <th>Cost</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -96,7 +104,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <table>
+                    <table>     
                         <th>
                             <tr>
                                 <td><h4>Subtotal : Rp. <?php echo number_format($totalHarga, 0, ',', '.'); ?></h4></td>
@@ -107,7 +115,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                         <div class="mb-3">
                             <label for="uang" class="form-label">Cash Received:</label>
-                            <input type="text" name="uang" id="uang" class="form-control">
+                            <input type="text" name="uang" id="uang" oninput="this.value = this.value.replace(/[^0-9]/g, '')" class="form-control">
                         </div>
                         <div class="mb-3">
                             <label for="kembalian" class="form-label">Change Amount:</label>

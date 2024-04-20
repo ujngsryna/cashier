@@ -1,12 +1,15 @@
 <?php 
 session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: ../index.php');
+    exit;
+}
+
 include '../layout/header.php';
 require_once('../db/db-connection.php');
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
-    exit;
-}
+
 ?>
 <section id="content">
     <!-- MAIN -->

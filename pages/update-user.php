@@ -1,12 +1,13 @@
 <?php
 session_start();
-include '../layout/header.php';
-require_once('../db/db-connection.php');
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
+    header('Location: ../index.php');
     exit;
 }
+
+include '../layout/header.php';
+require_once('../db/db-connection.php');
 
 // Check if user_id is set in the URL
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

@@ -1,13 +1,15 @@
 <?php 
 session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header('Location: ../index.php');
+    exit;
+}
+
 include '../layout/header.php';
 require_once('../db/db-connection.php');
 $product = select("SELECT * FROM products");
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header('Location: index.php');
-    exit;
-}
 
 ?>
 <section id="content">
@@ -36,7 +38,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 <table>
     <thead>
         <tr>
-            <th>ID</th>
             <th>Product Name</th>
             <th>Quantity</th>
             <th>Product Price</th>
@@ -47,7 +48,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <tbody>
     <?php foreach ($product as $products): ?>
         <tr>
-            <td><?php echo $products['id']; ?></td>
             <td><?php echo htmlspecialchars($products['nama_produk']); ?></td>
             <td><?php echo $products['jumlah']; ?></td>
             <td>Rp. <?php echo number_format($products["harga_produk"]); ?></td>
