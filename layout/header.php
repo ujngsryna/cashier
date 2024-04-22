@@ -61,6 +61,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </li>
             <?php endif; ?>
             
+            
             <li>
                 <a href="./products.php">
                     <i class='bx bxs-coffee'></i>
@@ -85,6 +86,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                 </a>
             </li>
             <?php endif; ?>
+            
         </ul>
         <ul class="side-menu">
             <li>
@@ -105,17 +107,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </div>
         </nav>
     </section>
-	<!-- --light: #303134;
-	--oren: #DC692C;
-	--link: #CFE8FF;
-	--grey: #202124;
-	--dark-grey: #4C4C4C;
-	--dark: #ffffff;
-	--red: #DB504A;
-	--yellow: #ffffff;
-	--light-yellow: #a88d32;
-	--orange: #FD7238;
-	--light-orange: #FFE0D3; -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const currentLocation = window.location.href;
@@ -169,5 +160,4 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
     <script src="../javascript/script.js"></script>
 </body>
-
 </html>

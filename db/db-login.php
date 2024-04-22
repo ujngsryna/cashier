@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['nama'] = $user['nama'];
         $_SESSION['username'] = $username;
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['level']  = $user['level'];
+        $_SESSION['level']  = $user['level'];   
 
         // Redirect user based on their level
         if ($_SESSION['level'] == 'kasir') {

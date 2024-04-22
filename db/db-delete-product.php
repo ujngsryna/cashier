@@ -4,16 +4,6 @@ session_start();
 require_once('db-connection.php');
 include '../config/app.php';
 
-// membatasi halaman sebelum login
-// if (!isset($_SESSION["login"])) {
-//   echo "<script>
-//           alert('Anda perlu login untuk memasuki halaman');
-//           document.location.href = '../index.php';
-//         </script>";
-//   exit;
-// }
-
-
 $id = (int)$_GET['id'];
 
 // Fetch product data before deletion for logging

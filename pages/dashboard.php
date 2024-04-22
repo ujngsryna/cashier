@@ -16,7 +16,7 @@ if ($_SESSION["level"] != "kasir") {
     exit;
 }
 
-}
+}   
 
 // FUNGSI CARD INFO UNTUK LEVEL OWNER //
 // Lakukan query untuk mengambil total terjual
@@ -104,5 +104,5 @@ $product = select("SELECT * FROM products");
         </ul>
         <?php endif; ?>
 
-    <!-- MAIN -->
+
 </section>

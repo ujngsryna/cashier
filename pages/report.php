@@ -58,7 +58,7 @@ $transaksi = select("SELECT * FROM transaksi_produk");
                             <th>Product Name</th>
                             <th>Date Order</th>
                             <th>Quantity</th>
-                            <th>Total Cost</th>
+                            <th>Sub Total</th>
                         </thead>
                         <tbody>
                             <?php foreach ($transaksi as $row) : ?>
@@ -66,7 +66,7 @@ $transaksi = select("SELECT * FROM transaksi_produk");
                                     <td><?php echo $row['nama_produk']; ?></td>
                                     <td><?php echo date('d F Y H:i:s', strtotime($row['tanggal_transaksi'])); ?></td>
                                     <td><?php echo $row['jumlah']; ?></td>
-                                    <td><?php echo $row['total_harga']; ?></td>
+                                    <td>Rp. <?php echo number_format($row["total_harga"]); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
