@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "225009777";
 $dbname = "cashier_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
