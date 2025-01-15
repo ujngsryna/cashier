@@ -54,30 +54,45 @@ $kembalian = $transaksi['kembalian'];
     <style>
         body {
             font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
         }
 
         .container {
-            padding: 20px;
-            max-width: 400px;
+            max-width: 300px;
             margin: 0 auto;
-        }
-
-        .struk {
-            border: 1px solid #000;
             padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            max-width: 100px;
-            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
         }
 
         .text-center {
             text-align: center;
         }
 
-        /* Sembunyikan tombol cetak saat halaman dicetak */
+        .logo {
+            max-width: 80px;
+            margin-bottom: 10px;
+        }
+
+        .details, .total-section, .footer {
+            margin-top: 10px;
+            border-top: 1px dashed #000;
+            padding-top: 10px;
+        }
+
+        .footer {
+            font-size: 12px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .no-print {
+            margin-top: 20px;
+        }
+
+        /* Sembunyikan tombol cetak saat dicetak */
         @media print {
             .no-print {
                 display: none;
@@ -89,25 +104,42 @@ $kembalian = $transaksi['kembalian'];
     <div class="container">
         <div class="text-center">
             <img src="../img/logo.png" alt="Logo" class="logo">
-            <h2>Morcoffee</h2>
-            <p>Follow us on Instagram @morcoffeed</p>
+            <h5>Enigmachino</h5>
         </div>
-        <?php foreach ($transaksi_produk as $produk) : ?>
-            <div class="struk">
-                <p><strong>Product Name:</strong> <?php echo $produk['nama_produk']; ?></p>
-                <p><strong>Product Price:</strong> Rp. <?php echo number_format($produk['harga_produk'], 0, ',', '.'); ?></p>
-                <p><strong>Quantity:</strong> <?php echo $produk['jumlah']; ?></p>
-                <p><strong>Total Cost:</strong> Rp. <?php echo number_format($produk['total_harga'], 0, ',', '.'); ?></p>
-            </div>
-        <?php endforeach; ?>
-        <div class="struk">
-            <p><strong>Cash :</strong> Rp. <?php echo number_format($uangPelanggan, 0, ',', '.'); ?></p>
-            <p><strong>Subtotal :</strong> Rp. <?php echo number_format($totalHarga, 0, ',', '.'); ?></p>
-            <p><strong>Cash Amount :</strong> Rp. <?php echo number_format($kembalian, 0, ',', '.'); ?></p>
+
+        <div class="text-center my-3">
+            <h4>Rp<?php echo number_format($totalHarga, 0, ',', '.'); ?></h4>
+            <p><strong>Jumlah</strong></p>
         </div>
-        <div class="text-center">
-            <button class="btn btn-primary no-print" onclick="window.print()">Print</button>
-            <a href="transaction.php" class="btn btn-secondary no-print">Back</a>
+
+        <div class="details">
+            <p>Order: <?php echo $id_transaksi; ?> <?php echo date('d/m/Y H:i'); ?></p>
+            
+        </div>
+
+        <div class="details">
+            <?php foreach ($transaksi_produk as $produk) : ?>
+                <p><?php echo $produk['nama_produk']; ?></p>
+                <p><?php echo $produk['jumlah']; ?> × Rp<?php echo number_format($produk['harga_produk'], 0, ',', '.'); ?></p>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="total-section">
+            <p><strong>Subtotal:</strong> Rp<?php echo number_format($totalHarga, 0, ',', '.'); ?></p>
+            <p><strong>Jumlah:</strong> Rp<?php echo number_format($totalHarga, 0, ',', '.'); ?></p>
+            <p><strong>Tunai:</strong> Rp<?php echo number_format($uangPelanggan, 0, ',', '.'); ?></p>
+            <p><strong>Kembalian:</strong> Rp<?php echo number_format($kembalian, 0, ',', '.'); ?></p>
+        </div>
+
+        <div class="footer">
+            <p>Terima kasih atas pembelian Anda!</p>
+            <p>Alamat: Jl. Braga No.38, Bandung</p>
+            
+        </div>
+
+        <div class="text-center no-print">
+            <button class="btn btn-primary" onclick="window.print()">Print</button>
+            <a href="transaction.php" class="btn btn-secondary">Back</a>
         </div>
     </div>
 </body>

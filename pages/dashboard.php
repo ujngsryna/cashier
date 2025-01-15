@@ -49,6 +49,16 @@ if ($result) {
 
 $product = select("SELECT * FROM products");
 
+// Hitung total user
+$query_user = "SELECT COUNT(*) AS total_user FROM users"; // Ganti 'users' dengan nama tabel user Anda
+$result_user = mysqli_query($conn, $query_user);
+$total_user = mysqli_fetch_assoc($result_user)['total_user'];
+
+// Hitung total produk
+$query_product = "SELECT COUNT(*) AS total_product FROM products"; // Ganti 'products' dengan nama tabel produk Anda
+$result_product = mysqli_query($conn, $query_product);
+$total_product = mysqli_fetch_assoc($result_product)['total_product'];
+
 ?>
 
 <!-- CONTENT -->
@@ -69,20 +79,21 @@ $product = select("SELECT * FROM products");
         </div>
         <?php if ($_SESSION['level'] == "admin") : ?>
         <ul class="box-info">
-            <li>
-                <i class='bx bxs-group'></i>
-                <span class="text">
-                    <h3>3</h3>
-                    <p>Total User</p>
-                </span>
-            </li>
-            <li>
-                <i class='bx bxs-shopping-bag-alt'></i>
-                <span class="text">
-                    <h3>5</h3>
-                    <p>Total Product</p>
-                </span>
-            </li>
+        <li>
+    <i class='bx bxs-group'></i>
+    <span class="text">
+        <h3><?php echo $total_user; ?></h3> <!-- Data dari database -->
+        <p>Total User</p>
+    </span>
+</li>
+<li>
+    <i class='bx bxs-shopping-bag-alt'></i>
+    <span class="text">
+        <h3><?php echo $total_product; ?></h3> <!-- Data dari database -->
+        <p>Total Product</p>
+    </span>
+</li>
+
             <?php endif; ?>
 
         <?php if ($_SESSION['level'] == "owner") : ?>

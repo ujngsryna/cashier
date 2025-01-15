@@ -11,7 +11,7 @@ require_once('db/db-login.php')
 <div class="container">
     <img style="width: 150px; margin-bottom: 2rem;" src="img/logo.png" alt="Morcoffee Logo">
     <form method="POST">
-        <h3>Morcoffee Cashier</h3>
+        <h3>Enigmachino Coffee</h3>
         
         <?php if (isset($error_message)): ?>
             <div id="loginAlert" class="alert alert-danger" role="alert">

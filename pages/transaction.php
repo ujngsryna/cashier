@@ -20,6 +20,11 @@ include '../db/db-transaction.php';
 include '../layout/header.php';
 
 ?>
+<style>
+    .status.process.add-btn, .status.process, .status.pending {
+        cursor: pointer; /* Ubah kursor menjadi pointer saat diarahkan */
+    }
+</style>
 
 <!-- CONTENT -->
 <section id="content">

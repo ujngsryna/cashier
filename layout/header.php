@@ -21,7 +21,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <!-- My CSS -->
     <link rel="stylesheet" href="../style/style.css">
     <link href='../img/beans.png' rel='shortcut icon'>
-    <title>Morcoffee Cashier</title>
+    <title>Enigmachino Coffee</title>
 </head>
 
 <body>
@@ -30,7 +30,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <section id="sidebar">
         <a href="dashboard.php" class="brand">
             <img src="../img/beans.png" width="35px" height="35px"  alt="logo" class="logo">
-            <span class="text">Morcoffee</span>
+            <span class="text">Enigmachino Coffee</span>
         </a>
         <ul class="side-menu top">
 
