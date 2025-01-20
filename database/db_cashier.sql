@@ -1,15 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 11, 2024 at 08:24 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Waktu pembuatan: 20 Jan 2025 pada 05.10
+-- Versi server: 10.4.20-MariaDB
+-- Versi PHP: 7.4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = "+07:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -18,13 +18,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cashier_db`
+-- Database: `db_cashier`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `activity_log`
+-- Struktur dari tabel `activity_log`
 --
 
 CREATE TABLE `activity_log` (
@@ -34,19 +34,26 @@ CREATE TABLE `activity_log` (
   `action` varchar(255) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
   `product_name` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `activity_log`
+-- Dumping data untuk tabel `activity_log`
 --
 
 INSERT INTO `activity_log` (`id`, `timestamp`, `username`, `action`, `product_id`, `product_name`) VALUES
-;
+(36, '2025-01-19 21:16:17', 'admin', 'Add User', 29, NULL),
+(37, '2025-01-19 21:17:10', 'admin', 'Add User', 30, NULL),
+(38, '2025-01-19 21:38:49', 'admin', 'Add User', 31, NULL),
+(39, '2025-01-19 21:38:57', 'admin', 'Delete User', 13, 'daffaaptara'),
+(40, '2025-01-19 21:39:05', 'admin', 'Delete User', 17, 'komeng'),
+(41, '2025-01-19 21:40:46', 'admin', 'Delete User', 18, 'daffaadmin'),
+(42, '2025-01-19 21:40:56', 'admin', 'Delete User', 28, 'md5'),
+(43, '2025-01-19 21:42:03', 'admin', 'Add Product', 22, 'Cappuchino');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `products`
+-- Struktur dari tabel `products`
 --
 
 CREATE TABLE `products` (
@@ -57,23 +64,19 @@ CREATE TABLE `products` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `jumlah` int(11) DEFAULT 0,
   `kode_unik` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `products`
+-- Dumping data untuk tabel `products`
 --
 
 INSERT INTO `products` (`id`, `nama_produk`, `harga_produk`, `created_at`, `updated_at`, `jumlah`, `kode_unik`) VALUES
-(1, 'Kopi Arabica', 25000, '2024-02-23 15:11:25', '2024-03-13 08:26:37', 18, 'abcde'),
-(2, 'Cappuccino', 30000, '2024-02-23 15:11:25', '2024-04-11 18:19:23', 24, 'fghij'),
-(3, 'Espresso', 15000, '2024-02-23 15:11:25', '2024-03-13 10:49:34', 5, 'klmno'),
-(17, 'Shakeratto Robusta', 28000, '2024-02-26 09:44:35', '2024-03-09 15:51:04', 29, '21d9bf4439'),
-(21, 'Shakeratto Arabica', 28000, '2024-03-03 12:17:13', '2024-03-05 16:14:30', 39, 'c71cad2f97');
+(22, 'Cappuchino', 25000, '2025-01-20 03:42:01', '2025-01-20 03:43:18', 28, '9264287761');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaksi`
+-- Struktur dari tabel `transaksi`
 --
 
 CREATE TABLE `transaksi` (
@@ -82,19 +85,20 @@ CREATE TABLE `transaksi` (
   `uang_pelanggan` decimal(10,2) DEFAULT NULL,
   `kembalian` decimal(10,2) DEFAULT NULL,
   `total_harga` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `transaksi`
+-- Dumping data untuk tabel `transaksi`
 --
 
 INSERT INTO `transaksi` (`id_transaksi`, `tanggal_transaksi`, `uang_pelanggan`, `kembalian`, `total_harga`) VALUES
-;
+(46, '2025-01-20 03:42:56', '50000.00', '25000.00', '25000.00'),
+(47, '2025-01-20 03:43:16', '50000.00', '25000.00', '25000.00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transaksi_produk`
+-- Struktur dari tabel `transaksi_produk`
 --
 
 CREATE TABLE `transaksi_produk` (
@@ -105,19 +109,20 @@ CREATE TABLE `transaksi_produk` (
   `tanggal_transaksi` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `kode_unik` varchar(50) DEFAULT NULL,
   `total_harga` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `transaksi_produk`
+-- Dumping data untuk tabel `transaksi_produk`
 --
 
 INSERT INTO `transaksi_produk` (`id_transaksi`, `nama_produk`, `harga_produk`, `jumlah`, `tanggal_transaksi`, `kode_unik`, `total_harga`) VALUES
-;
+(46, 'Cappuchino', '25000.00', 1, '2025-01-20 03:42:56', '9264287761', '25000.00'),
+(47, 'Cappuchino', '25000.00', 1, '2025-01-20 03:43:16', '9264287761', '25000.00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
@@ -128,89 +133,72 @@ CREATE TABLE `users` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `level` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `nama`, `created_at`, `updated_at`, `level`) VALUES
-(13, 'owner', '123123', 'daffaaptara', '2024-02-22 02:16:26', '2024-02-26 09:40:28', 'owner'),
-(17, 'kasir', '123123', 'komeng', '2024-02-24 18:33:38', '2024-02-26 02:42:34', 'kasir'),
-(18, 'admin', '123123', 'daffaadmin', '2024-02-26 02:32:09', '2024-03-03 12:21:56', 'admin'),
-(28, 'md5', '$2y$10$UkjQlQsr6I0s.M15o.u7G.OoqoBbK/L6l06ZyH', 'md5', '2024-03-31 22:25:36', '2024-03-31 22:25:36', 'kasir');
+(29, 'owner', '123123', 'Agung (Owner)', '2025-01-20 03:16:17', '2025-01-20 03:16:17', 'owner'),
+(30, 'kasir', '123123', 'Zahra (Kasir)', '2025-01-20 03:17:10', '2025-01-20 03:17:10', 'kasir'),
+(31, 'admin', '123123', 'Pidi (Admin)', '2025-01-20 03:38:49', '2025-01-20 03:38:49', 'admin');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `activity_log`
+-- Indeks untuk tabel `activity_log`
 --
 ALTER TABLE `activity_log`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `products`
+-- Indeks untuk tabel `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `transaksi`
+-- Indeks untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
   ADD PRIMARY KEY (`id_transaksi`);
 
 --
--- Indexes for table `transaksi_produk`
---
-ALTER TABLE `transaksi_produk`
-  ADD KEY `id_transaksi` (`id_transaksi`);
-
---
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `activity_log`
+-- AUTO_INCREMENT untuk tabel `activity_log`
 --
 ALTER TABLE `activity_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
--- AUTO_INCREMENT for table `products`
+-- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT for table `transaksi`
+-- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `transaksi_produk`
---
-ALTER TABLE `transaksi_produk`
-  ADD CONSTRAINT `transaksi_produk_ibfk_1` FOREIGN KEY (`id_transaksi`) REFERENCES `transaksi` (`id_transaksi`);
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

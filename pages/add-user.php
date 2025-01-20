@@ -43,22 +43,23 @@ if ($_SESSION["level"] == "kasir") {
                     <a href="user.php"> <i class='bx bx-undo text-white' href="user.php" style="font-size:30px;"></i></a>
                 </div>
                 <form action="../db/db-add-user.php" method="post">
-            <label for="name">Name :</label>
-            <input type="text" id="nama" name="nama" required><br>
-            <label for="username">Username :</label>
-            <input type="text" id="username" name="username" required><br>
-            <label for="password">Password :</label>
-            <input type="password" id="password" name="password" required><br>
-            <label for="password">Level</label>
-            <div class="form-group">
-            <select name="level" id="level" class="form-control" required>
-                      <option value="">-- Select Level --</option>
-                      <option value="kasir">Cashier</option>
-                      <option value="owner">Owner</option>
-                      <option value="admin">Admin</option>
-                  </select>
-                  </div>
-            <button type="submit" name="submit">Submit</button>
+                <label for="name">Name :</label>
+<input type="text" id="nama" name="nama" required><br>
+<label for="username">Username :</label>
+<input type="text" id="username" name="username" required><br>
+<label for="password">Password :</label>
+<input type="password" id="password" name="password" required><br>
+<label for="password">Level</label>
+<div class="form-group">
+    <select name="level" id="level" class="form-control" required>
+        <option value="">-- Select Level --</option>
+        <option value="kasir">Cashier</option>
+    </select>
+</div>
+<button type="submit" id="submit" name="submit">Submit</button>
+
+
+
             
             </div>
         </div>
@@ -112,4 +113,14 @@ button[type="submit"]:hover {
 }
 </style>
 
+<script>
+// Contoh validasi tambahan
+document.getElementById('submit').addEventListener('click', function (event) {
+    const level = document.getElementById('level').value;
 
+    if (level !== 'kasir') {
+        event.preventDefault(); // Mencegah pengiriman form
+        alert('Admin hanya dapat menambahkan pengguna dengan level "Cashier".');
+    }
+});
+</script>
