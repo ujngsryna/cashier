@@ -61,7 +61,7 @@ if ($_SESSION["level"] != "owner" && $_SESSION['level'] != "admin") {
                             <td><?= htmlspecialchars($user['nama']); ?></td>
                             <td><?= date('d F Y H:i:s', strtotime($user['created_at'])); ?></td>
                             <td><?= date('d F Y H:i:s', strtotime($user['updated_at'])); ?></td>
-                            <td><span class="status process"><?= htmlspecialchars($user['level']); ?></span></td>
+                            <td><?= htmlspecialchars($user['level']); ?></td>
                             <?php if ($_SESSION['level'] == "admin") : ?>
                             <td class="text-center">
                                 <a href="update-user.php?id=<?= $user['id']; ?>"><i class='bx bxs-edit text-blue' style="font-size:20px;"></i></a>

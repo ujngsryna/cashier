@@ -8,6 +8,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 include_once '../db/db-connection.php';
 
+// Set timezone ke Asia/Jakarta (UTC+7)
+date_default_timezone_set('Asia/Jakarta');
+
 // Periksa apakah ID transaksi disediakan dalam parameter GET
 if (!isset($_GET['id_transaksi'])) {
     echo "ID transaksi tidak ditemukan.";
@@ -103,8 +106,8 @@ $kembalian = $transaksi['kembalian'];
 <body>
     <div class="container">
         <div class="text-center">
-            <img src="../img/logo.png" alt="Logo" class="logo">
-            <h5>Enigmachino</h5>
+            <img src="../img/klikmart.png" alt="Logo" class="logo">
+            <h5>KlikMart</h5>
         </div>
 
         <div class="text-center my-3">
@@ -114,7 +117,6 @@ $kembalian = $transaksi['kembalian'];
 
         <div class="details">
             <p>Order: <?php echo $id_transaksi; ?> <?php echo date('d/m/Y H:i'); ?></p>
-            
         </div>
 
         <div class="details">
@@ -134,7 +136,6 @@ $kembalian = $transaksi['kembalian'];
         <div class="footer">
             <p>Terima kasih atas pembelian Anda!</p>
             <p>Alamat: Jl. Braga No.38, Bandung</p>
-            
         </div>
 
         <div class="text-center no-print">

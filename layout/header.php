@@ -20,8 +20,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <!-- My CSS -->
     <link rel="stylesheet" href="../style/style.css">
-    <link href='../img/beans.png' rel='shortcut icon'>
-    <title>Enigmachino Coffee</title>
+    <link href='../img/logo_mini.png' rel='shortcut icon'>
+    <title>KlikMart</title>
 </head>
 
 <body>
@@ -29,8 +29,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <!-- SIDEBAR -->
     <section id="sidebar">
         <a href="dashboard.php" class="brand">
-            <img src="../img/beans.png" width="35px" height="35px"  alt="logo" class="logo">
-            <span class="text">Enigmachino Coffee</span>
+            <img src="../img/logo_mini.png" width="35px" height="35px"  alt="logo" class="logo">
+            <span class="text">KlikMart</span>
         </a>
         <ul class="side-menu top">
 
@@ -68,6 +68,16 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     <span class="text">Products</span>
                 </a>
             </li>
+
+            <?php if ($_SESSION['level'] == "owner" || $_SESSION['level'] == "admin") : ?>
+<li>
+    <a href="./supplier.php">
+        <i class='bx bxs-truck'></i>
+        <span class="text">Suppliers</span>
+    </a>
+</li>
+<?php endif; ?>
+
 
             <?php if ($_SESSION['level'] == "admin") : ?>
             <li>

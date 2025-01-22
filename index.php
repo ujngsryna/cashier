@@ -3,15 +3,15 @@ require_once('db/db-connection.php');
 require_once('db/db-login.php')
 ?>
 
-<link href='img/beans.png' rel='shortcut icon'>
+<link href='img/logo_mini.png' rel='shortcut icon'>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <div class="container">
-    <img style="width: 150px; margin-bottom: 2rem;" src="img/logo.png" alt="Morcoffee Logo">
+    <img style="width: 150px; margin-bottom: 2rem;" src="./img/klikmart.png" alt="KlikMart Logo">
     <form method="POST">
-        <h3>Enigmachino Coffee</h3>
+        <h3>KlikMart</h3>
         
         <?php if (isset($error_message)): ?>
             <div id="loginAlert" class="alert alert-danger" role="alert">
