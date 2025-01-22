@@ -26,7 +26,7 @@ if ($_SESSION["level"] != "owner" && $_SESSION['level'] != "admin") {
             <div class="left">
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">Dashboard</a>
+                        <a href="pages/dashboard.php">Dashboard</a>
                     </li>
                     <li><i class='bx bx-chevron-right'></i></li>
                     <li>
