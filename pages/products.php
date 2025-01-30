@@ -10,6 +10,19 @@ include '../layout/header.php';
 require_once('../db/db-connection.php');
 $product = select("SELECT * FROM products");
 ?>
+
+<style>
+.text-white {
+    color: #ffffff;
+}
+.text-blue {
+    color: #007bff; /* Ubah sesuai dengan warna biru yang Anda inginkan */
+}
+.text-red {
+    color: #ff0000; /* Ubah sesuai dengan warna merah yang Anda inginkan */
+}
+</style>
+
 <section id="content">
     <!-- MAIN -->
     <main>
@@ -68,14 +81,3 @@ $product = select("SELECT * FROM products");
     </main>
 </section>
 
-<style>
-.text-white {
-    color: #ffffff;
-}
-.text-blue {
-    color: #007bff; /* Ubah sesuai dengan warna biru yang Anda inginkan */
-}
-.text-red {
-    color: #ff0000; /* Ubah sesuai dengan warna merah yang Anda inginkan */
-}
-</style>

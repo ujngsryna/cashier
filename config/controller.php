@@ -105,3 +105,35 @@ function delete_product($id)
 
     return mysqli_affected_rows($db);
 }
+
+// fungsi menghapus data supplier
+function delete_supplier($id)
+{
+    global $db;
+
+    // Ambil nama supplier sebelum menghapus
+    $result = mysqli_query($db, "SELECT name FROM suppliers WHERE id = $id");
+    $row = mysqli_fetch_assoc($result);
+    $nama_supplier = $row['name'];
+
+    // Query hapus data supplier
+    $query = "DELETE FROM suppliers WHERE id = $id";
+    mysqli_query($db, $query);
+
+    // Cek apakah penghapusan berhasil
+    if (mysqli_affected_rows($db) > 0) {
+        // Jika berhasil, tambahkan entri log
+        $timestamp = date("Y-m-d H:i:s");
+        $username = $_SESSION['username'];
+        $action = "Delete Supplier";
+        $product_id = $id; // Gunakan id supplier yang dihapus sebagai id produk dalam log
+        $product_name = $nama_supplier;
+
+        $log_query = "INSERT INTO activity_log (timestamp, username, action, product_id, product_name) 
+                      VALUES ('$timestamp', '$username', '$action', $product_id, '$product_name')";
+        mysqli_query($db, $log_query);
+    }
+
+    return mysqli_affected_rows($db);
+}
+

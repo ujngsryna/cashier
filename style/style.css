@@ -519,4 +519,8 @@ button[type="submit"]:hover {
     border-radius: 5px;
 }
 
+.text-red {
+    color: #ff0000; /* Ubah sesuai dengan warna merah yang Anda inginkan */
+}
+
  /* ADD SUPLIER

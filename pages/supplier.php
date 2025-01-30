@@ -32,6 +32,12 @@ $total_suppliers = mysqli_fetch_assoc($total_suppliers_result)['total_suppliers'
     .text-white {
     color: #ffffff;
     }
+    .text-blue {
+    color: #007bff; /* Ubah sesuai dengan warna biru yang Anda inginkan */
+}
+.text-red {
+    color: #ff0000; /* Ubah sesuai dengan warna merah yang Anda inginkan */
+}
     </style>
 </head>
 <body>
@@ -66,7 +72,7 @@ $total_suppliers = mysqli_fetch_assoc($total_suppliers_result)['total_suppliers'
                         <h3>Supplier List</h3>
                         <!-- Tombol Tambah Supplier -->
                         <?php if ($_SESSION['level'] == "admin") : ?>
-                            <a href="/cashierapp/pages/add_supplier.php" class="add-supplier"><i class='bx bx-plus text-white' style="font-size:30px;"></i></a>
+                            <a href="add-supplier.php"><i class='bx bx-plus text-white' style="font-size:30px;"></i></a>
                         <?php endif; ?>
                     </div>
                     <table>
@@ -84,10 +90,10 @@ $total_suppliers = mysqli_fetch_assoc($total_suppliers_result)['total_suppliers'
                                 <td><?php echo htmlspecialchars($row['id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['name']); ?></td>
                                 <td><?php echo htmlspecialchars($row['contact']); ?></td>
-                                <td>
-                                    <a href="edit_supplier.php?id=<?php echo urlencode($row['id']); ?>" class="status completed">Edit</a>
-                                    <a href="delete_supplier.php?id=<?php echo urlencode($row['id']); ?>" class="status pending" onclick="return confirm('Are you sure?')">Delete</a>
-                                </td>
+                                <td class="text-center">
+                                <a href="update-products.php?id=<?= $products['id']; ?>"><i class='bx bxs-edit text-blue' style="font-size:20px;"></i></a>
+                                <a href="../db/db-delete-supplier.php?id=<?= $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');"><i class='bx bxs-trash text-red' style="font-size:20px;" name="delete_supplier"></i></a>
+                            </td>
                             </tr>
                             <?php endwhile; ?>
                         </tbody>
