@@ -8,7 +8,10 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 include '../layout/header.php';
 require_once('../db/db-connection.php');
-$product = select("SELECT * FROM products");
+// Modified query to include category information through JOIN
+$product = select("SELECT p.*, c.nama_kategori 
+                  FROM products p 
+                  LEFT JOIN kategori_produk c ON p.kategori_id = c.id");
 ?>
 
 <style>
@@ -16,10 +19,10 @@ $product = select("SELECT * FROM products");
     color: #ffffff;
 }
 .text-blue {
-    color: #007bff; /* Ubah sesuai dengan warna biru yang Anda inginkan */
+    color: #007bff;
 }
 .text-red {
-    color: #ff0000; /* Ubah sesuai dengan warna merah yang Anda inginkan */
+    color: #ff0000;
 }
 </style>
 
@@ -44,13 +47,17 @@ $product = select("SELECT * FROM products");
                 <div class="head">
                     <h3>Manage Product</h3>
                     <?php if ($_SESSION['level'] == "admin") : ?>
-                    <a href="add-products.php"><i class='bx bx-plus text-white' style="font-size:30px;"></i></a>
+                    <div>
+                        <a href="manage-categories.php" class="me-2"><i class='bx bx-category text-white' style="font-size:30px;"></i></a>
+                        <a href="add-products.php"><i class='bx bx-plus text-white' style="font-size:30px;"></i></a>
+                    </div>
                     <?php endif; ?>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Product Name</th>
+                            <th>Category</th>
                             <th>Quantity</th>
                             <th>Product Price</th>
                             <th>Latest Update</th>
@@ -63,6 +70,7 @@ $product = select("SELECT * FROM products");
                         <?php foreach ($product as $products): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($products['nama_produk']); ?></td>
+                            <td><?php echo htmlspecialchars($products['nama_kategori'] ?? 'Uncategorized'); ?></td>
                             <td><?php echo $products['jumlah']; ?></td>
                             <td>Rp. <?php echo number_format($products["harga_produk"]); ?></td>
                             <td><?php echo date('d F Y H:i:s', strtotime($products['updated_at'])); ?></td>
@@ -80,4 +88,3 @@ $product = select("SELECT * FROM products");
         </div>
     </main>
 </section>
-
