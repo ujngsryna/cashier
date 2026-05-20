@@ -81,6 +81,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
             <?php if ($_SESSION['level'] == "admin") : ?>
             <li>
+                <a href="./manage-categories.php">
+                    <i class='bx bx-category'></i>
+                    <span class="text">Categories</span>
+                </a>
+            </li>
+
+            <li>
                 <a href="./activity.php">
                     <i class='bx bxs-message-dots'></i>
                     <span class="text">Activity</span>

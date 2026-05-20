@@ -9,6 +9,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 include '../layout/header.php';
 require_once('../db/db-connection.php');
 
+$categories = mysqli_query($conn, "SELECT id, nama_kategori FROM kategori_produk ORDER BY nama_kategori");
+
 // Ambil semua data produk
 $query = "SELECT * FROM products";
 $result = mysqli_query($conn, $query);
@@ -36,8 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_product'])) {
     // Hilangkan tanda titik dari input harga sebelum menyimpannya
     $harga_produk = str_replace('.', '', $_POST['harga_produk']);
     $jumlah = $_POST['jumlah'];
+    $kategori_id = isset($_POST['kategori_id']) ? intval($_POST['kategori_id']) : 0;
     
-    $query = "UPDATE products SET nama_produk='$nama_produk', harga_produk=$harga_produk, updated_at=NOW(), jumlah=$jumlah WHERE id=$id";
+    $query = "UPDATE products SET nama_produk='$nama_produk', harga_produk=$harga_produk, updated_at=NOW(), jumlah=$jumlah, kategori_id=$kategori_id WHERE id=$id";
     $result = mysqli_query($conn, $query);
     if ($result) {
         header("Location: products.php");
@@ -78,6 +81,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_product'])) {
                     <input type="text" id="nama" name="nama" value="<?= $product['nama_produk'] ?? ''; ?>" required><br>
                     <label for="harga_produk">Price :</label>
                     <input type="text" id="harga_produk" name="harga_produk" value="<?= $product['harga_produk'] ?? ''; ?>" required><br>
+                    <label for="kategori_id">Category :</label>
+                    <select id="kategori_id" name="kategori_id" required>
+                        <option value="">-- Select Category --</option>
+                        <?php while ($category = mysqli_fetch_assoc($categories)): ?>
+                            <option value="<?= $category['id']; ?>" <?= isset($product['kategori_id']) && $product['kategori_id'] == $category['id'] ? 'selected' : '' ?>><?= htmlspecialchars($category['nama_kategori']); ?></option>
+                        <?php endwhile; ?>
+                    </select><br>
                     <label for="jumlah">Quantity :</label>
                     <input type="text" id="jumlah" name="jumlah" value="<?= $product['jumlah'] ?? ''; ?>" required><br>
                     <!-- Tambahkan field lain sesuai kebutuhan, seperti quantity -->

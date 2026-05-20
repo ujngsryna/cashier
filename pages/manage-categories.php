@@ -36,7 +36,7 @@ $categories = select("SELECT k.*, COUNT(p.id) as product_count
                 <div class="head">
                     <h3>Tambah Kategori Baru</h3>
                 </div>
-                <form action="../db/db-add-category.php" method="POST" class="p-3">
+                    <form action="../db/db-add-categories.php" method="POST" class="p-3">
                     <div class="form-group mb-3">
                         <label for="nama_kategori">Nama Kategori:</label>
                         <input type="text" class="form-control" id="nama_kategori" name="nama_kategori" required>
@@ -68,14 +68,18 @@ $categories = select("SELECT k.*, COUNT(p.id) as product_count
                             <td><?php echo $category['product_count']; ?> produk</td>
                             <td><?php echo date('d F Y H:i:s', strtotime($category['updated_at'])); ?></td>
                             <td class="text-center">
-                                <a href="#" onclick="editCategory(<?= $category['id']; ?>, '<?= htmlspecialchars($category['nama_kategori']); ?>')" class="me-2">
-                                    <i class='bx bxs-edit text-blue' style="font-size:20px;"></i>
+                                <a href="#" onclick="editCategory(<?= $category['id']; ?>, '<?= htmlspecialchars($category['nama_kategori']); ?>')" class="me-2 action-icon" title="Edit">
+                                    <i class='bx bxs-edit text-blue' style="font-size:18px;"></i>
                                 </a>
                                 <?php if ($category['product_count'] == 0): ?>
-                                <a href="../db/db-delete-category.php?id=<?= $category['id']; ?>" 
-                                   onclick="return confirm('Yakin ingin menghapus kategori ini?');">
-                                    <i class='bx bxs-trash text-red' style="font-size:20px;"></i>
-                                </a>
+                                    <a href="../db/db-delete-categories.php?id=<?= $category['id']; ?>" class="action-icon" 
+                                       onclick="return confirm('Yakin ingin menghapus kategori ini?');" title="Hapus">
+                                        <i class='bx bxs-trash text-red' style="font-size:18px;"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="action-icon disabled-delete" title="Tidak dapat dihapus — digunakan oleh <?= $category['product_count']; ?> produk">
+                                        <i class='bx bxs-trash text-red' style="font-size:18px;"></i>
+                                    </span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -93,7 +97,7 @@ $categories = select("SELECT k.*, COUNT(p.id) as product_count
                 <h5 class="modal-title text-white">Edit Kategori</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="../db/db-update-category.php" method="POST">
+            <form action="../db/db-update-categories.php" method="POST">
                 <div class="modal-body">
                     <input type="hidden" id="edit_category_id" name="category_id">
                     <div class="form-group">
@@ -132,10 +136,34 @@ input::placeholder {
 </section>
 
 <script>
-function editCategory(id, nama) {
-    document.getElementById('edit_category_id').value = id;
-    document.getElementById('edit_nama_kategori').value = nama;
-    var modal = new bootstrap.Modal(document.getElementById('editCategoryModal'));
-    modal.show();
-}
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('editCategoryModal');
+
+    function openModal() {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // Close when clicking on elements that have data-bs-dismiss="modal" or btn-close
+    modal.querySelectorAll('[data-bs-dismiss="modal"], .btn-close').forEach(btn => {
+        btn.addEventListener('click', closeModal);
+    });
+
+    // Close when clicking outside dialog
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+    });
+
+    // Expose function to global scope for inline onclick handlers
+    window.editCategory = function (id, nama) {
+        document.getElementById('edit_category_id').value = id;
+        document.getElementById('edit_nama_kategori').value = nama;
+        openModal();
+    }
+});
 </script>

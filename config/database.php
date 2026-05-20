@@ -1,6 +1,7 @@
 <?php
 
 $db = mysqli_connect('localhost', 'root', '', 'db_cashier');
+$conn = $db;
 
 
 ?>

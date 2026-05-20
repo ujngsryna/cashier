@@ -9,6 +9,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 include '../layout/header.php';
 require_once('../db/db-connection.php');
 
+$categories = mysqli_query($conn, "SELECT id, nama_kategori FROM kategori_produk ORDER BY nama_kategori");
 
 ?>
 <section id="content">
@@ -39,6 +40,13 @@ require_once('../db/db-connection.php');
                     <input type="text" id="nama_produk" name="nama_produk" required><br>
                     <label for="harga">Price :</label>
                     <input type="text" id="harga_produk" name="harga_produk" required><br>
+                    <label for="kategori_id">Category :</label>
+                    <select id="kategori_id" name="kategori_id" required>
+                        <option value="">-- Select Category --</option>
+                        <?php while ($category = mysqli_fetch_assoc($categories)): ?>
+                            <option value="<?= $category['id']; ?>"><?= htmlspecialchars($category['nama_kategori']); ?></option>
+                        <?php endwhile; ?>
+                    </select><br>
                     <label for="jumlah">Quantity :</label>
                     <input type="text" id="jumlah" name="jumlah" required><br>
                     <button type="submit" name="add_product">Submit</button>
