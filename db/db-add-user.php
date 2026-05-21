@@ -7,20 +7,30 @@ if (isset($_POST['submit'])) {
     $username   = strip_tags($_POST['username']);
     $password   = strip_tags($_POST['password']);
     $level      = strip_tags($_POST['level']);
+    $supplier_id = isset($_POST['supplier_id']) && $_POST['supplier_id'] !== '' ? intval($_POST['supplier_id']) : null;
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Generating a random string using openssl_random_pseudo_bytes (alternative to random_bytes)
-    $kode_unik = bin2hex(openssl_random_pseudo_bytes(5));
+    $has_supplier_column = false;
+    $result = $conn->query("SHOW COLUMNS FROM users LIKE 'supplier_id'");
+    if ($result && $result->num_rows > 0) {
+        $has_supplier_column = true;
+    }
 
-    $stmt = $conn->prepare("INSERT INTO users (nama, username, password, level) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $nama, $username, $password, $level);
+    if ($has_supplier_column) {
+        $stmt = $conn->prepare("INSERT INTO users (nama, username, password, level, supplier_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssis", $nama, $username, $hashed_password, $level, $supplier_id);
+    } else {
+        $stmt = $conn->prepare("INSERT INTO users (nama, username, password, level) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $nama, $username, $hashed_password, $level);
+    }
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
         $timestamp = date("Y-m-d H:i:s");
-        $username = $_SESSION['username'];
+        $admin_username = $_SESSION['username'];
         $action = "Add User";
-        $product_id = $stmt->insert_id; // Get the ID of the inserted product
-        $product_name = $nama_produk;
+        $product_id = $stmt->insert_id; // Get the ID of the inserted user
+        $product_name = $nama;
         
         $log_stmt = $conn->prepare("INSERT INTO activity_log (timestamp, username, action, product_id, product_name) VALUES (?, ?, ?, ?, ?)");
         $log_stmt->bind_param("sssis", $timestamp, $username, $action, $product_id, $product_name);

@@ -88,8 +88,10 @@ CREATE TABLE `products` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `jumlah` int(11) DEFAULT 0,
+  `warehouse_stock` int(11) DEFAULT 0,
   `kode_unik` varchar(255) DEFAULT NULL,
-  `kategori_id` int(11) DEFAULT NULL
+  `kategori_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -178,11 +180,12 @@ INSERT INTO `transaksi_produk` (`id_transaksi`, `nama_produk`, `harga_produk`, `
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(45) DEFAULT NULL,
-  `password` varchar(45) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `nama` varchar(45) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `level` varchar(10) NOT NULL
+  `level` varchar(10) NOT NULL,
+  `supplier_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

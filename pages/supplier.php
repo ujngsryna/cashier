@@ -81,19 +81,24 @@ $total_suppliers = mysqli_fetch_assoc($total_suppliers_result)['total_suppliers'
                                 <th>#</th>
                                 <th>Supplier Name</th>
                                 <th>Contact</th>
+                                <th>Account Username</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <?php while ($row = mysqli_fetch_assoc($result)):
+                                $user_stmt = mysqli_query($conn, "SELECT username FROM users WHERE supplier_id = " . intval($row['id']) . " LIMIT 1");
+                                $user_row = $user_stmt ? mysqli_fetch_assoc($user_stmt) : null;
+                            ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($row['id']); ?></td>
                                 <td><?php echo htmlspecialchars($row['name']); ?></td>
                                 <td><?php echo htmlspecialchars($row['contact']); ?></td>
+                                <td><?php echo htmlspecialchars($user_row['username'] ?? '-'); ?></td>
                                 <td class="text-center">
-                                <a href="update-products.php?id=<?= $products['id']; ?>"><i class='bx bxs-edit text-blue' style="font-size:20px;"></i></a>
-                                <a href="../db/db-delete-supplier.php?id=<?= $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this product?');"><i class='bx bxs-trash text-red' style="font-size:20px;" name="delete_supplier"></i></a>
-                            </td>
+                                    <a href="update-supplier.php?id=<?= $row['id']; ?>"><i class='bx bxs-edit text-blue' style="font-size:20px;"></i></a>
+                                    <a href="../db/db-delete-supplier.php?id=<?= $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this supplier?');"><i class='bx bxs-trash text-red' style="font-size:20px;" name="delete_supplier"></i></a>
+                                </td>
                             </tr>
                             <?php endwhile; ?>
                         </tbody>

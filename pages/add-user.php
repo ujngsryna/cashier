@@ -17,6 +17,16 @@ if ($_SESSION["level"] == "kasir") {
     exit;
   } 
 
+$has_supplier_column = false;
+$result = $conn->query("SHOW COLUMNS FROM users LIKE 'supplier_id'");
+if ($result && $result->num_rows > 0) {
+    $has_supplier_column = true;
+}
+
+if ($has_supplier_column) {
+    $suppliers = mysqli_query($conn, "SELECT id, name FROM suppliers ORDER BY name");
+}
+
 ?>
 <section id="content">
         <!-- MAIN -->
@@ -49,13 +59,25 @@ if ($_SESSION["level"] == "kasir") {
 <input type="text" id="username" name="username" required><br>
 <label for="password">Password :</label>
 <input type="password" id="password" name="password" required><br>
-<label for="password">Level</label>
+<label for="level">Level</label>
 <div class="form-group">
     <select name="level" id="level" class="form-control" required>
         <option value="">-- Select Level --</option>
         <option value="kasir">Cashier</option>
+        <option value="supplier">Supplier</option>
     </select>
 </div>
+<?php if ($has_supplier_column): ?>
+    <label for="supplier_id">Supplier (untuk akun supplier):</label>
+    <div class="form-group">
+        <select name="supplier_id" id="supplier_id" class="form-control">
+            <option value="">-- Select Supplier --</option>
+            <?php while ($supplier = mysqli_fetch_assoc($suppliers)): ?>
+                <option value="<?= $supplier['id']; ?>"><?= htmlspecialchars($supplier['name']); ?></option>
+            <?php endwhile; ?>
+        </select>
+    </div>
+<?php endif; ?>
 <button type="submit" id="submit" name="submit">Submit</button>
 
 
@@ -113,14 +135,3 @@ button[type="submit"]:hover {
 }
 </style>
 
-<script>
-// Contoh validasi tambahan
-document.getElementById('submit').addEventListener('click', function (event) {
-    const level = document.getElementById('level').value;
-
-    if (level !== 'kasir') {
-        event.preventDefault(); // Mencegah pengiriman form
-        alert('Admin hanya dapat menambahkan pengguna dengan level "Cashier".');
-    }
-});
-</script>

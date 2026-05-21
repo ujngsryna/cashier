@@ -77,7 +77,23 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     </a>
 </li>
 <?php endif; ?>
+            <?php if ($_SESSION['level'] == "admin") : ?>
+            <li>
+                <a href="./link-user-supplier.php">
+                    <i class='bx bx-link'></i>
+                    <span class="text">Link User-Supplier</span>
+                </a>
+            </li>
+            <?php endif; ?>
 
+<?php if ($_SESSION['level'] == "supplier") : ?>
+<li>
+    <a href="./supplier-restock.php">
+        <i class='bx bxs-truck'></i>
+        <span class="text">Restock Gudang</span>
+    </a>
+</li>
+<?php endif; ?>
 
             <?php if ($_SESSION['level'] == "admin") : ?>
             <li>

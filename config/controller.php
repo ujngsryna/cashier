@@ -16,6 +16,15 @@ function select($query)
     return $rows;
 }
 
+function column_exists($table, $column)
+{
+    global $db;
+    $safe_table = mysqli_real_escape_string($db, $table);
+    $safe_column = mysqli_real_escape_string($db, $column);
+    $result = mysqli_query($db, "SHOW COLUMNS FROM `{$safe_table}` LIKE '{$safe_column}'");
+    return $result && mysqli_num_rows($result) > 0;
+}
+
 // fungsi tambah akun
 function create_akun($post)
 {

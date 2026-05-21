@@ -10,6 +10,23 @@ include '../layout/header.php';
 require_once('../db/db-connection.php');
 
 $categories = mysqli_query($conn, "SELECT id, nama_kategori FROM kategori_produk ORDER BY nama_kategori");
+$has_supplier_column = false;
+$has_warehouse_stock_column = false;
+
+$result = $conn->query("SHOW COLUMNS FROM products LIKE 'supplier_id'");
+if ($result && $result->num_rows > 0) {
+    $has_supplier_column = true;
+}
+$result = $conn->query("SHOW COLUMNS FROM products LIKE 'warehouse_stock'");
+if ($result && $result->num_rows > 0) {
+    $has_warehouse_stock_column = true;
+}
+
+if ($has_supplier_column) {
+    $suppliers = mysqli_query($conn, "SELECT id, name FROM suppliers ORDER BY name");
+} else {
+    $suppliers = [];
+}
 
 // Ambil semua data produk
 $query = "SELECT * FROM products";
@@ -39,8 +56,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_product'])) {
     $harga_produk = str_replace('.', '', $_POST['harga_produk']);
     $jumlah = $_POST['jumlah'];
     $kategori_id = isset($_POST['kategori_id']) ? intval($_POST['kategori_id']) : 0;
-    
-    $query = "UPDATE products SET nama_produk='$nama_produk', harga_produk=$harga_produk, updated_at=NOW(), jumlah=$jumlah, kategori_id=$kategori_id WHERE id=$id";
+
+    $has_supplier_column = false;
+    $has_warehouse_stock_column = false;
+    $result = $conn->query("SHOW COLUMNS FROM products LIKE 'supplier_id'");
+    if ($result && $result->num_rows > 0) {
+        $has_supplier_column = true;
+    }
+    $result = $conn->query("SHOW COLUMNS FROM products LIKE 'warehouse_stock'");
+    if ($result && $result->num_rows > 0) {
+        $has_warehouse_stock_column = true;
+    }
+
+    $supplier_id = $has_supplier_column ? intval($_POST['supplier_id']) : null;
+    $warehouse_stock = $has_warehouse_stock_column ? intval($_POST['warehouse_stock']) : 0;
+
+    $updateFields = [
+        "nama_produk='$nama_produk'",
+        "harga_produk=$harga_produk",
+        "updated_at=NOW()",
+        "jumlah=$jumlah",
+        "kategori_id=$kategori_id"
+    ];
+
+    if ($has_warehouse_stock_column) {
+        $updateFields[] = "warehouse_stock=$warehouse_stock";
+    }
+    if ($has_supplier_column) {
+        $updateFields[] = "supplier_id=$supplier_id";
+    }
+
+    $query = "UPDATE products SET " . implode(', ', $updateFields) . " WHERE id=$id";
     $result = mysqli_query($conn, $query);
     if ($result) {
         header("Location: products.php");
@@ -88,9 +134,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_product'])) {
                             <option value="<?= $category['id']; ?>" <?= isset($product['kategori_id']) && $product['kategori_id'] == $category['id'] ? 'selected' : '' ?>><?= htmlspecialchars($category['nama_kategori']); ?></option>
                         <?php endwhile; ?>
                     </select><br>
+                    <?php if ($has_supplier_column): ?>
+                        <label for="supplier_id">Supplier :</label>
+                        <select id="supplier_id" name="supplier_id" required>
+                            <option value="">-- Select Supplier --</option>
+                            <?php while ($supplier = mysqli_fetch_assoc($suppliers)): ?>
+                                <option value="<?= $supplier['id']; ?>" <?= isset($product['supplier_id']) && $product['supplier_id'] == $supplier['id'] ? 'selected' : '' ?>><?= htmlspecialchars($supplier['name']); ?></option>
+                            <?php endwhile; ?>
+                        </select><br>
+                    <?php endif; ?>
                     <label for="jumlah">Quantity :</label>
                     <input type="text" id="jumlah" name="jumlah" value="<?= $product['jumlah'] ?? ''; ?>" required><br>
-                    <!-- Tambahkan field lain sesuai kebutuhan, seperti quantity -->
+                    <?php if ($has_warehouse_stock_column): ?>
+                        <label for="warehouse_stock">Warehouse Stock :</label>
+                        <input type="number" id="warehouse_stock" name="warehouse_stock" value="<?= $product['warehouse_stock'] ?? 0; ?>" min="0" required><br>
+                    <?php endif; ?>
                     <button type="submit" name="update_product">Submit</button>
                 </form>
             </div>

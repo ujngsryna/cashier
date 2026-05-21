@@ -10,6 +10,18 @@ include '../layout/header.php';
 require_once('../db/db-connection.php');
 
 $categories = mysqli_query($conn, "SELECT id, nama_kategori FROM kategori_produk ORDER BY nama_kategori");
+$has_supplier_column = column_exists('products', 'supplier_id');
+$has_warehouse_stock_column = column_exists('products', 'warehouse_stock');
+// If current user is supplier, fetch their supplier_id and hide the supplier select
+$current_user_supplier_id = null;
+if ($has_supplier_column && isset($_SESSION['level']) && $_SESSION['level'] === 'supplier') {
+    $uid = intval($_SESSION['user_id']);
+    $ures = mysqli_query($conn, "SELECT supplier_id FROM users WHERE id = $uid");
+    $urow = $ures ? mysqli_fetch_assoc($ures) : null;
+    $current_user_supplier_id = $urow['supplier_id'] ?? null;
+} elseif ($has_supplier_column) {
+    $suppliers = mysqli_query($conn, "SELECT id, name FROM suppliers ORDER BY name");
+}
 
 ?>
 <section id="content">
@@ -47,8 +59,38 @@ $categories = mysqli_query($conn, "SELECT id, nama_kategori FROM kategori_produk
                             <option value="<?= $category['id']; ?>"><?= htmlspecialchars($category['nama_kategori']); ?></option>
                         <?php endwhile; ?>
                     </select><br>
+                    <?php if ($has_supplier_column): ?>
+                        <?php if (isset($_SESSION['level']) && $_SESSION['level'] === 'supplier'): ?>
+                            <label>Supplier: </label>
+                            <div>
+                                <?php if ($current_user_supplier_id): ?>
+                                    <?php
+                                    $sres = mysqli_query($conn, "SELECT name FROM suppliers WHERE id = " . intval($current_user_supplier_id));
+                                    $srow = $sres ? mysqli_fetch_assoc($sres) : null;
+                                    $sname = $srow['name'] ?? 'Unknown Supplier';
+                                    ?>
+                                    <strong><?= htmlspecialchars($sname); ?></strong>
+                                    <input type="hidden" name="supplier_id" value="<?= intval($current_user_supplier_id); ?>">
+                                <?php else: ?>
+                                    <em>Anda belum ditautkan dengan supplier. Hubungi admin.</em>
+                                <?php endif; ?>
+                            </div>
+                        <?php else: ?>
+                            <label for="supplier_id">Supplier :</label>
+                            <select id="supplier_id" name="supplier_id" required>
+                                <option value="">-- Select Supplier --</option>
+                                <?php while ($supplier = mysqli_fetch_assoc($suppliers)): ?>
+                                    <option value="<?= $supplier['id']; ?>"><?= htmlspecialchars($supplier['name']); ?></option>
+                                <?php endwhile; ?>
+                            </select><br>
+                        <?php endif; ?>
+                    <?php endif; ?>
                     <label for="jumlah">Quantity :</label>
                     <input type="text" id="jumlah" name="jumlah" required><br>
+                    <?php if ($has_warehouse_stock_column): ?>
+                        <label for="warehouse_stock">Warehouse Stock :</label>
+                        <input type="number" id="warehouse_stock" name="warehouse_stock" value="0" min="0" required><br>
+                    <?php endif; ?>
                     <button type="submit" name="add_product">Submit</button>
                 </form>
             </div>

@@ -8,9 +8,32 @@ if (isset($_POST['update_user'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $level = $_POST['level'];
+    $supplier_id = isset($_POST['supplier_id']) && $_POST['supplier_id'] !== '' ? intval($_POST['supplier_id']) : null;
+    $hashed_password = !empty($password) ? password_hash($password, PASSWORD_DEFAULT) : null;
 
-    $stmt = $conn->prepare("UPDATE users SET nama = ?, username = ?, password = ?, level = ? WHERE id = ?");
-    $stmt->bind_param("ssssi", $nama, $username, $password, $level, $id);
+    $has_supplier_column = false;
+    $result = $conn->query("SHOW COLUMNS FROM users LIKE 'supplier_id'");
+    if ($result && $result->num_rows > 0) {
+        $has_supplier_column = true;
+    }
+
+    if ($has_supplier_column) {
+        if ($hashed_password !== null) {
+            $stmt = $conn->prepare("UPDATE users SET nama = ?, username = ?, password = ?, level = ?, supplier_id = ? WHERE id = ?");
+            $stmt->bind_param("sssiii", $nama, $username, $hashed_password, $level, $supplier_id, $id);
+        } else {
+            $stmt = $conn->prepare("UPDATE users SET nama = ?, username = ?, level = ?, supplier_id = ? WHERE id = ?");
+            $stmt->bind_param("ssiii", $nama, $username, $level, $supplier_id, $id);
+        }
+    } else {
+        if ($hashed_password !== null) {
+            $stmt = $conn->prepare("UPDATE users SET nama = ?, username = ?, password = ?, level = ? WHERE id = ?");
+            $stmt->bind_param("ssssi", $nama, $username, $hashed_password, $level, $id);
+        } else {
+            $stmt = $conn->prepare("UPDATE users SET nama = ?, username = ?, level = ? WHERE id = ?");
+            $stmt->bind_param("sssi", $nama, $username, $level, $id);
+        }
+    }
 
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
@@ -28,40 +51,3 @@ if (isset($_POST['update_user'])) {
 header('location: ../pages/user.php');
 exit;
 ?>
-
-  // Periksa apakah parameter id sudah diterima
-  if(isset($_GET['id'])) {
-      $id = $_GET['id'];
-
-      // Ambil data pengguna berdasarkan ID
-      $user = select("SELECT * FROM users WHERE id = ?", [$id]);
-
-      // Pastikan data pengguna ditemukan
-      if($user) {
-          $user = $user[0]; // Ambil data pengguna pertama
-      } else {
-          echo "User not found!";
-          exit;
-      }
-  } else {
-      echo "User ID not provided!";
-      exit;
-  }
-
-  // Jika form dikirimkan
-  if(isset($_POST['submit'])) {
-      // Ambil data dari form
-      $nama = $_POST['nama'];
-      $username = $_POST['username'];
-      $password = $_POST['password'];
-      $level = $_POST['level'];
-
-      // Update data pengguna di database
-      $update_result = update("UPDATE users SET nama = ?, username = ?, password = ?, level = ? WHERE id = ?", [$nama, $username, $password, $level, $id]);
-
-      if($update_result) {
-          echo "User updated successfully!";
-      } else {
-          echo "Failed to update user!";
-      }
-  }
